@@ -1,0 +1,33 @@
+[project]
+name = "ecommerce-api"
+version = "0.1.0"
+description = "Vention e-commerce API"
+authors = [
+    {name = "Oleg Yaroshevich", email = "olafieros@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "fastapi (>=0.141.1,<0.142.0)",
+    "uvicorn[standard] (>=0.52.1,<0.53.0)",
+    "sqlalchemy (>=2.0.52,<3.0.0)",
+    "psycopg2-binary (>=2.9.12,<3.0.0)",
+    "pydantic-settings (>=2.15.0,<3.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10.0.0)",
+    "ruff (>=0.16.2,<0.17.0)",
+    "pre-commit (>=4.6.2,<5.0.0)",
+    "factory-boy (>=3.3.3,<4.0.0)",
+    "faker (>=40.36.0,<41.0.0)",
+    "httpx (>=0.28.1,<0.29.0)"
+]

@@ -1,7 +1,8 @@
 FROM python:3.14-slim
 
 ENV POETRY_VERSION=2.4.1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+    POETRY_CACHE_DIR=/tmp/poetry_cache \
+    POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR /app
 

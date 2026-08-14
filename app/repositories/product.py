@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -7,8 +7,7 @@ from app.models.product_category import ProductCategory
 
 
 async def get_products(
-    db: AsyncSession,
-    category_id: int | None = None,
+    db: AsyncSession, category_id: int | None = None, q: str | None = None
 ) -> list[Product]:
     """Fetches products from the database, optionally filtered by category_id."""
     stmt = select(Product).options(selectinload(Product.categories))
@@ -16,6 +15,10 @@ async def get_products(
         stmt = stmt.join(
             ProductCategory, Product.id == ProductCategory.product_id
         ).where(ProductCategory.category_id == category_id)
+    if q is not None:
+        stmt = stmt.where(
+            or_(Product.name.ilike(f"%{q}%"), Product.description.ilike(f"%{q}%"))
+        )
     stmt = stmt.order_by(Product.name, Product.id)
     result = await db.execute(stmt)
 

@@ -8,7 +8,7 @@ class ProductBase(BaseModel):
 
     id: int
     name: str
-    description: str
+    description: str | None = None
     price: float
     created_at: datetime
     updated_at: datetime

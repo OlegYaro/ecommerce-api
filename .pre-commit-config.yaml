@@ -1,6 +1,5 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Версия ruff. Держи её в согласии с версией в poetry.lock.
     rev: v0.16.2
     hooks:
 

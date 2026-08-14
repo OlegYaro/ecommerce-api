@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -9,7 +10,7 @@ class ProductBase(BaseModel):
     id: int
     name: str
     description: str | None = None
-    price: float
+    price: Decimal
     created_at: datetime
     updated_at: datetime
 

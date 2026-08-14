@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -6,6 +8,8 @@ class CategoryBase(BaseModel):
 
     id: int
     name: str
+    created_at: datetime
+    updated_at: datetime
 
 
 class CategoryReadSchema(CategoryBase):

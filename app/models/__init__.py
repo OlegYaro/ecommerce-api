@@ -1,3 +1,3 @@
-from app.models.category import CategoryOrm
+from app.models.category import Category
 
-__all__ = ["CategoryOrm"]
+__all__ = ["Category"]

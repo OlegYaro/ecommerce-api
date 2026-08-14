@@ -1,3 +1,5 @@
-from app.models.category import Category
+from .category import Category
+from .product import Product
+from .product_category import ProductCategory
 
-__all__ = ["Category"]
+__all__ = ["Category", "Product", "ProductCategory"]

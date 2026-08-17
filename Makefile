@@ -1,5 +1,11 @@
 .PHONY: up down rebuild migrate create_migration downgrade shell psql lint check
 
+# Pull in .env so the credentials live in one place and never reach the repo.
+# Leading dash: don't fail on a fresh clone where .env doesn't exist yet.
+-include .env
+export
+
+TEST_DB_NAME ?= ecommerce_test
 
 up:
 	docker compose up
@@ -43,3 +49,17 @@ fresh:
 	docker compose down -v
 	docker compose up -d --build
 	docker compose exec -T db psql -U postgres -d ecommerce < scripts/seed.sql
+
+
+
+test-db:
+	@docker compose exec -T db psql -U postgres -tAc \
+		"SELECT 1 FROM pg_database WHERE datname='$(TEST_DB_NAME)'" | grep -q 1 \
+		|| docker compose exec -T db psql -U postgres -c "CREATE DATABASE $(TEST_DB_NAME)"
+
+test: test-db
+	DB_URL=$(TEST_DB_URL) poetry run alembic upgrade head
+	DB_URL=$(TEST_DB_URL) poetry run pytest
+
+test-one: test-db
+	DB_URL=$(TEST_DB_URL) poetry run pytest -k "$(k)" -vv

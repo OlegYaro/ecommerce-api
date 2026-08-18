@@ -9,7 +9,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("")
 async def list_product(
-    db: DbSession, category_id: int | None = None
+    db: DbSession, category_id: int | None = None, q: str | None = None
 ) -> list[ProductReadSchema]:
     """Return all products by category in the shop."""
-    return await get_products_service(db, category_id)
+    return await get_products_service(db, category_id, q)

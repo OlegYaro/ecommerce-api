@@ -35,3 +35,11 @@ lint:
 
 check:
 	poetry run ruff check . && poetry run ruff format --check .
+
+seed:
+	docker compose exec -T db psql -U postgres -d ecommerce < scripts/seed.sql
+
+fresh:
+	docker compose down -v
+	docker compose up -d --build
+	docker compose exec -T db psql -U postgres -d ecommerce < scripts/seed.sql

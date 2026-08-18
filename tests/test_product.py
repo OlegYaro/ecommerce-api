@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repositories import get_products
+from app.repositories import get_product, get_products
 
 from .factories import CategoryFactory, ProductFactory
 
@@ -54,3 +54,18 @@ async def test_repository_search_filters_by_name(db_session: AsyncSession, persi
     products = await get_products(db_session, q="mug")
 
     assert [p.name for p in products] == ["Ceramic mug"]
+
+
+async def test_repository_get_product(db_session: AsyncSession, persist):
+    product = await persist(ProductFactory(name="Ceramic mug"))
+
+    result = await get_product(db_session, product[0].id)
+
+    assert result.name == "Ceramic mug"
+
+
+async def test_get_product_returns_404_for_missing_id(client):
+    response = await client.get(f"{PRODUCTS_URL}/999999")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Product not found"

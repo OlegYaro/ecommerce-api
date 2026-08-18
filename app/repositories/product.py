@@ -23,3 +23,15 @@ async def get_products(
     result = await db.execute(stmt)
 
     return list(result.scalars().all())
+
+
+async def get_product(db: AsyncSession, product_id: int):
+    """Fetches a single product by its ID from the database."""
+    stmt = (
+        select(Product)
+        .options(selectinload(Product.categories))
+        .where(Product.id == product_id)
+    )
+    result = await db.scalar(stmt)
+
+    return result

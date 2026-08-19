@@ -1,4 +1,11 @@
 from .category import get_categories
 from .product import get_product, get_products
+from .user import create_user, get_user_by_email
 
-__all__ = ["get_categories", "get_products", "get_product"]
+__all__ = [
+    "get_categories",
+    "get_products",
+    "get_product",
+    "create_user",
+    "get_user_by_email",
+]

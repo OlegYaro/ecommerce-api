@@ -5,4 +5,5 @@ from app.models import (
     Category,  # noqa: F401
     Product,  # noqa: F401
     ProductCategory,  # noqa: F401
+    User,  # noqa: F401
 )

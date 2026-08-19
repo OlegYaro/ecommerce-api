@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
 from app.core import settings
-from app.db.session import AsyncSessionLocal
+from app.db.session import AsyncSessionLocal, engine
 from app.main import app
 
 assert str(settings.DB_URL).endswith("_test"), " Use `make test`."
@@ -14,10 +14,15 @@ assert str(settings.DB_URL).endswith("_test"), " Use `make test`."
 
 @pytest.fixture
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
-    """One session per test, rolled back afterwards."""
-    async with AsyncSessionLocal() as session:
-        yield session
-        await session.rollback()
+    """One session per test, rolled back afterwards,add savepoint for commit user."""
+    async with engine.connect() as connection:
+        transaction = await connection.begin()
+        async with AsyncSessionLocal(
+            bind=connection,
+            join_transaction_mode="create_savepoint",
+        ) as session:
+            yield session
+        await transaction.rollback()
 
 
 @pytest.fixture

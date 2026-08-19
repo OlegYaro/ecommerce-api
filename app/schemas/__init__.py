@@ -1,4 +1,10 @@
-from app.schemas.category import CategoryReadSchema
-from app.schemas.product import ProductReadSchema
+from .category import CategoryReadSchema
+from .product import ProductReadSchema
+from .user import UserCreateSchema, UserReadSchema
 
-__all__ = ["CategoryReadSchema", "ProductReadSchema"]
+__all__ = [
+    "CategoryReadSchema",
+    "ProductReadSchema",
+    "UserCreateSchema",
+    "UserReadSchema",
+]

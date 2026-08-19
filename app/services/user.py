@@ -1,9 +1,10 @@
-from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import hash_password
 from app.dto import UserDTO, UserPasswordDTO, UserPasswordHashDTO
 from app.repositories import create_user, get_user_by_email
+
+from .exceptions import EmailExistsError
 
 
 class UserService:
@@ -13,9 +14,9 @@ class UserService:
     async def register_user(db: AsyncSession, user_data: UserPasswordDTO) -> UserDTO:
         """Register a new user in the database."""
         if await get_user_by_email(db, user_data.email) is not None:
-            return None
+            raise EmailExistsError(user_data.email)
 
-        password_hash = await run_in_threadpool(hash_password, user_data.password)
+        password_hash = hash_password(user_data.password)
 
         user = await create_user(
             db,

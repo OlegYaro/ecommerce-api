@@ -1,7 +1,8 @@
-from datetime import datetime
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
+
+from .category import CategoryReadSchema
 
 
 class ProductBase(BaseModel):
@@ -11,8 +12,7 @@ class ProductBase(BaseModel):
     name: str
     description: str | None = None
     price: Decimal
-    created_at: datetime
-    updated_at: datetime
+    categories: list[CategoryReadSchema]
 
 
 class ProductReadSchema(ProductBase):

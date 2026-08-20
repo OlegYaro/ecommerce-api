@@ -29,7 +29,7 @@ async def user_register(db: DbSession, user: UserCreateSchema) -> UserReadSchema
     return user
 
 
-@router.post("/login", status_code=status.HTTP_201_CREATED)
+@router.post("/login", status_code=status.HTTP_200_OK)
 @router.post("/login")
 async def login(
     db: DbSession, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
@@ -41,7 +41,8 @@ async def login(
         )
     except InvalidCredentialsError as e:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Incorrect email or password"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
         ) from e
 
     access_token = create_access_token(subject=user.email)

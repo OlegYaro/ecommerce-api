@@ -32,7 +32,7 @@ async def get_current_user(db: DbSession, token: TokenDep) -> UserDTO:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    email = decode_token(token.access_token, "access")
+    email = decode_token(token, "access")
     if email is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

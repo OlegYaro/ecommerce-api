@@ -35,3 +35,12 @@ async def get_product(db: AsyncSession, product_id: int):
     result = await db.scalar(stmt)
 
     return result
+
+
+async def get_products_by_ids(
+    db: AsyncSession, product_ids: list[int]
+) -> list[Product]:
+    """Gets list of products id< and return list of Products from database."""
+    if not product_ids:
+        return []
+    return list(await db.scalars(select(Product).where(Product.id.in_(product_ids))))

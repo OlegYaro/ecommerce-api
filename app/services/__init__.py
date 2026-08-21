@@ -1,5 +1,6 @@
 from .category import get_categories_service
 from .exceptions import EmailExistsError, InvalidCredentialsError
+from .order import OrderService
 from .product import ProductService
 from .user import UserService
 
@@ -9,4 +10,5 @@ __all__ = [
     "UserService",
     "EmailExistsError",
     "InvalidCredentialsError",
+    "OrderService",
 ]

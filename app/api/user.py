@@ -30,15 +30,13 @@ async def user_register(db: DbSession, user: UserCreateSchema) -> UserReadSchema
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)
-@router.post("/login")
 async def login(
     db: DbSession, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
     """Authenticate a user and return access and refresh tokens."""
     try:
-        user = await UserService.authenticate_user(
-            db, form_data.username, form_data.password
-        )
+        email = form_data.username
+        user = await UserService.authenticate_user(db, email, form_data.password)
     except InvalidCredentialsError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,20 +52,22 @@ async def login(
 @router.post("/refresh", status_code=status.HTTP_201_CREATED)
 async def refresh(db: DbSession, token: RefreshTokenSchema) -> TokenSchema:
     """Refresh the access token using a valid refresh token."""
-    email = decode_token(token.refresh_token, "refresh")
-    if email is None:
+    try:
+        email = decode_token(token.refresh_token, "refresh")
+    except InvalidCredentialsError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
-    user = await UserService.get_user(db, email)
-    if user is None:
+    try:
+        user = await UserService.get_user_by_email(db, email)
+    except InvalidCredentialsError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid user",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
     return TokenSchema(access_token=create_access_token(user.email))

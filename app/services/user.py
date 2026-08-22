@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import hash_password, verify_password
 from app.dto import UserDTO, UserPasswordDTO, UserPasswordHashDTO
-from app.repositories import create_user, get_user_by_email
+from app.repositories import create_user
+from app.repositories import get_user_by_email as repo_get_user_by_email
 
 from .exceptions import EmailExistsError, InvalidCredentialsError
 
@@ -17,7 +18,7 @@ class UserService:
         Return UserDTO if successful, raise InvalidCredentialsError otherwise.
         """
         email = email.lower()
-        user = await get_user_by_email(db, email)
+        user = await repo_get_user_by_email(db, email)
         if user is None:
             raise InvalidCredentialsError()
 
@@ -27,16 +28,18 @@ class UserService:
         return UserDTO.model_validate(user)
 
     @staticmethod
-    async def get_user(db: AsyncSession, email: str) -> UserDTO | None:
+    async def get_user_by_email(db: AsyncSession, email: str) -> UserDTO | None:
         """Return the user with this email, or None."""
-        user = await get_user_by_email(db, email)
+        user = await repo_get_user_by_email(db, email)
+        if user is None:
+            raise InvalidCredentialsError()
         return UserDTO.model_validate(user) if user else None
 
     @staticmethod
     async def register_user(db: AsyncSession, user_data: UserPasswordDTO) -> UserDTO:
         """Register a new user in the database."""
         email = user_data.email.lower()
-        if await get_user_by_email(db, email) is not None:
+        if await repo_get_user_by_email(db, email) is not None:
             raise EmailExistsError(email)
 
         password_hash = hash_password(user_data.password)

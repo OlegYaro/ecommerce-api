@@ -2,6 +2,8 @@ from datetime import UTC, datetime, timedelta
 
 import jwt
 
+from app.services import InvalidCredentialsError
+
 from .config import settings
 
 
@@ -43,4 +45,6 @@ def decode_token(token: str, token_type: str) -> str:
         return None
     if payload["type"] != token_type:
         return None
+    if payload["sub"] is None:
+        raise InvalidCredentialsError
     return payload["sub"]

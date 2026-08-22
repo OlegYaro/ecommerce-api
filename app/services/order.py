@@ -27,18 +27,17 @@ class OrderService:
             price_of_product[i.id] = i.price
 
         items = []
+        total_amount = 0
         for item in order.items:
+            price = price_of_product.get(item.product_id)
             items.append(
                 OrderItemDTO(
                     product_id=item.product_id,
                     quantity=item.quantity,
-                    price_at_purchase=price_of_product.get(item.product_id),
+                    price_at_purchase=price,
                 )
             )
-
-        total_amount = 0
-        for item in items:
-            total_amount += item.price_at_purchase * item.quantity
+            total_amount += price * item.quantity
 
         full_order = await create_order(
             db,

@@ -1,7 +1,8 @@
 from decimal import Decimal
 
-from sqlalchemy import update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.dto import OrderItemDTO
 from app.models import Order, OrderItem
@@ -36,7 +37,20 @@ async def confirm_pending_order(db: AsyncSession, order_id: int) -> bool:
     stmt = (
         update(Order)
         .where(Order.id == order_id, Order.status == "pending")
-        .values(status="confirmed")
+        .values(status="approved")
     )
     result = await db.execute(stmt)
     return result
+
+
+async def get_orders_by_user_id(
+    db: AsyncSession,
+    user_id: int,
+):
+    """Fetches orders from the database for a specific user."""
+    stmt = (
+        select(Order).where(Order.user_id == user_id).options(selectinload(Order.items))
+    )
+    result = await db.execute(stmt)
+
+    return list(result.scalars().all())

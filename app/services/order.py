@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dto import OrderCreateDTO, OrderDTO, OrderItemDTO
-from app.repositories import create_order, get_products_by_ids
+from app.repositories import create_order, get_orders_by_user_id, get_products_by_ids
 from app.tasks.order import confirm_order_task
 
 
@@ -55,3 +55,10 @@ class OrderService:
         confirm_order_task.delay(full_order.id)
 
         return OrderDTO.model_validate(full_order)
+
+    @staticmethod
+    async def get_orders_of_user(db: AsyncSession, user_id: int) -> list[OrderDTO]:
+        """Return the orders of the current user."""
+        orders = await get_orders_by_user_id(db, user_id)
+
+        return [OrderDTO.model_validate(order) for order in orders]

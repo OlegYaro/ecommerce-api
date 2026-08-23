@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dto import OrderCreateDTO, OrderDTO, OrderItemDTO
 from app.repositories import create_order, get_products_by_ids
+from app.tasks.order import confirm_order_task
 
 
 class OrderService:
@@ -50,4 +51,7 @@ class OrderService:
         )
 
         await db.commit()
+
+        confirm_order_task.delay(full_order.id)
+
         return OrderDTO.model_validate(full_order)

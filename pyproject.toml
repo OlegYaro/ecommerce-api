@@ -19,7 +19,8 @@ dependencies = [
     "pyjwt (>=2.13.0,<3.0.0)",
     "email-validator (>=2.3.0,<3.0.0)",
     "greenlet (>=3.5.5,<4.0.0)",
-    "python-multipart (>=0.0.32,<0.0.33)"
+    "python-multipart (>=0.0.32,<0.0.33)",
+    "celery[redis] (>=5.6.3,<6.0.0)"
 ]
 
 [tool.poetry]
@@ -81,7 +82,8 @@ dev = [
     "factory-boy (>=3.3.3,<4.0.0)",
     "faker (>=40.36.0,<41.0.0)",
     "httpx (>=0.28.1,<0.29.0)",
-    "pytest-asyncio (>=1.4.0,<2.0.0)"
+    "pytest-asyncio (>=1.4.0,<2.0.0)",
+    "pytest-mock (>=3.15.1,<4.0.0)"
 ]
 
 [tool.pytest.ini_options]
@@ -90,3 +92,6 @@ asyncio_default_test_loop_scope = "session"
 asyncio_default_fixture_loop_scope = "session"
 testpaths = ["tests"]
 addopts = "-q --strict-markers"
+
+[tool.poetry.dependencies]
+celery = { extras = ["redis"], version = "^5.4" }

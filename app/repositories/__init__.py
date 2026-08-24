@@ -1,5 +1,6 @@
 from .category import get_categories
-from .product import get_product, get_products
+from .order import create_order
+from .product import get_product, get_products, get_products_by_ids
 from .user import create_user, get_user_by_email
 
 __all__ = [
@@ -8,4 +9,6 @@ __all__ = [
     "get_product",
     "create_user",
     "get_user_by_email",
+    "create_order",
+    "get_products_by_ids",
 ]

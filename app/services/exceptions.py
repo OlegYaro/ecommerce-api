@@ -4,3 +4,7 @@ class ServiceError(Exception):
 
 class EmailExistsError(ServiceError):
     """Dedublicate email."""
+
+
+class InvalidCredentialsError(ServiceError):
+    """Invalid email or password."""

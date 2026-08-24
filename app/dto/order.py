@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
+from app.models import OrderStatus
+
 
 class OrderItemCreateDTO(BaseModel):
     """A new order item as the customer sends it to the API."""
@@ -39,7 +41,7 @@ class OrderDTO(BaseModel):
 
     id: int
     user_id: int
-    status: str
+    status: OrderStatus
     payment_method: str
     delivery_method: str
     billing_information: str

@@ -6,7 +6,8 @@ from tests.factories import ProductFactory, UserFactory
 URL = "/api/order/new_order"
 
 
-async def test_create_an_order(client, persist):
+async def test_create_an_order(client, persist, mocker):
+    mocker.patch("app.services.order.confirm_order_task.delay")
     user = UserFactory(email="oleg@test.com")
     mug = ProductFactory(price=Decimal("110"))
     mug2 = ProductFactory(price=Decimal("5.50"))

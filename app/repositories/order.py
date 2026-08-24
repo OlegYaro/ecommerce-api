@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.dto import OrderItemDTO
-from app.models import Order, OrderItem
+from app.models import Order, OrderItem, OrderStatus
 
 
 async def create_order(
@@ -36,8 +36,8 @@ async def confirm_pending_order(db: AsyncSession, order_id: int) -> bool:
     """Change status of order."""
     stmt = (
         update(Order)
-        .where(Order.id == order_id, Order.status == "pending")
-        .values(status="approved")
+        .where(Order.id == order_id, Order.status == OrderStatus.pending)
+        .values(status=OrderStatus.approved)
     )
     result = await db.execute(stmt)
     return result

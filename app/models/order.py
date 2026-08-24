@@ -1,9 +1,18 @@
+import enum
 from decimal import Decimal
 
-from sqlalchemy import ForeignKey, Numeric, String, Text
+from sqlalchemy import Enum, ForeignKey, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
+
+
+class OrderStatus(enum.StrEnum):
+    """Enum class for status."""
+
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
 
 
 class Order(Base):
@@ -15,7 +24,7 @@ class Order(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="RESTRICT"), index=True
     )
-    status: Mapped[str] = mapped_column(String(16), default="pending")
+    status: Mapped[str] = mapped_column(Enum(OrderStatus), default=OrderStatus.pending)
     payment_method: Mapped[str] = mapped_column(String(16))
     delivery_method: Mapped[str] = mapped_column(String(16))
     billing_information: Mapped[str] = mapped_column(Text)

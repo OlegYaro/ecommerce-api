@@ -35,6 +35,9 @@ shell:
 psql:
 	docker compose exec db psql -U postgres -d ecommerce
 
+status:
+	docker compose exec db psql -U postgres -d ecommerce \
+  -c "select id, status, updated_at from orders order by id desc limit 5;"
 
 lint:
 	poetry run ruff check --fix . && poetry run ruff format .
